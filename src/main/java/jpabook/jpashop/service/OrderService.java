@@ -30,15 +30,15 @@ public class OrderService {
         Item item = itemRepository.findOne(itemId);
 
         //배송정보 생성
-        Delievery delievery = new Delievery();
-        delievery.setAddress(member.getAddress());
-        delievery.setStatus(DelieveryStatus.READY);
+        Delivery Delivery = new Delivery();
+        Delivery.setAddress(member.getAddress());
+        Delivery.setStatus(DeliveryStatus.READY);
 
         //주문상품 생성
         OrderItem orderItem = OrderItem.createOrderItem(item,item.getPrice(),count);
 
         //주문 저장
-        Order order = Order.createOrder(member, delievery, orderItem);
+        Order order = Order.createOrder(member, Delivery, orderItem);
         orderRepository.save(order);
 
         return order.getId();

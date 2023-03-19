@@ -32,9 +32,9 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    @OneToOne(fetch = LAZY, cascade = CascadeType.ALL) // Order(연관주) > Delievery JoinColumn
-    @JoinColumn(name = "delievery_id")
-    private Delievery delievery;
+    @OneToOne(fetch = LAZY, cascade = CascadeType.ALL) // Order(연관주) > Delivery JoinColumn
+    @JoinColumn(name = "Delivery_id")
+    private Delivery Delivery;
 
     private LocalDateTime orderDate;
 
@@ -51,16 +51,16 @@ public class Order {
         orderItem.setOrder(this);
     }
 
-    public void setDelievery(Delievery delievery){
-        this.delievery = delievery;
-        delievery.setOrder(this);
+    public void setDelivery(Delivery Delivery){
+        this.Delivery = Delivery;
+        Delivery.setOrder(this);
     }
 
     //==생성 메서드==//
-    public static Order createOrder(Member member, Delievery delievery, OrderItem... orderItems){
+    public static Order createOrder(Member member, Delivery Delivery, OrderItem... orderItems){
         Order order = new Order();
         order.setMember(member);
-        order.setDelievery(delievery);
+        order.setDelivery(Delivery);
         for (OrderItem orderItem : orderItems) {
          order.addOrderItem(orderItem);
         }
@@ -73,7 +73,7 @@ public class Order {
     //==비즈니스 로직==//
     /** 주문 취소 */
     public void cancel(){
-        if(delievery.getStatus() == DelieveryStatus.COMP){
+        if(Delivery.getStatus() == DeliveryStatus.COMP){
             throw new IllegalStateException("이미 배송완료된 상품은 취소가 불가능합니다.");
         }
         this.setStatus(OrderStatus.CANCEL);

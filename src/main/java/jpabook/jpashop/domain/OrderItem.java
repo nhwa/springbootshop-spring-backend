@@ -1,5 +1,6 @@
 package jpabook.jpashop.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +28,8 @@ public class OrderItem {
     private Item item;
 
     //OrderItem(주인) > order
-    @ManyToOne(fetch = LAZY)
+    @JsonIgnore
+    @ManyToOne(fetch = LAZY) //ToOne 무조건 지연로딩
     @JoinColumn(name="order_id")
     private Order order;
 

@@ -1,5 +1,6 @@
 package jpabook.jpashop.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
@@ -28,6 +29,7 @@ public class Member {
      * 연관관계 주인이 아닌 곳에 ( mappedby = )
      * 오더 테이블에있는 멤버 필드에 의해서 맵핑된다.
      */
+    @JsonIgnore
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 

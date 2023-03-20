@@ -2,9 +2,11 @@ package jpabook.jpashop.api;
 
 import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.domain.OrderSearch;
+import jpabook.jpashop.repository.OrderSearch;
 import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.repository.OrderRepository;
+import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryDto;
+import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  *
@@ -28,6 +31,8 @@ import java.util.stream.Collectors;
 public class OrderSimpleApiController {
 
     private final OrderRepository orderRepository;
+    // v4
+    private final OrderSimpleQueryRepository orderSimpleQueryRepository;
     /**
      * V1. 엔티티 직접 노출
      *
@@ -58,7 +63,7 @@ public class OrderSimpleApiController {
         //N + 1 -> 1 + 회원2 + 배송 2 = 5번 쿼리 (같은 회원인경우 -> 1 + 회원1 + 배송 2 = 4번)
         List<Order> orders = orderRepository.findAllByString(new OrderSearch());
         List<SimpleOrderDto> result = orders.stream()
-                .map(o -> new SimpleOrderDto(o)).collect(Collectors.toList());
+                .map(o -> new SimpleOrderDto(o)).collect(toList());
         return result;
     }
     @Data
@@ -76,7 +81,19 @@ public class OrderSimpleApiController {
             orderStatus = order.getStatus();
             address = order.getDelivery().getAddress(); //LAZY 초기화
         }
-
-
     }
+    /**
+     * V3. 엔티티를 조회해서 DTO로 변환(fetch join 사용 O)
+     * - fetch join으로 쿼리 1번 호출
+     * V3 > V4 (성능차이는 미비, V3가 재사용성이 높음)
+     */
+    @GetMapping("/api/v3/simple-orders")
+    public List<SimpleOrderDto> ordersV3() {
+        List<Order> orders = orderRepository.findAllWithMemberDelivery();
+        List<SimpleOrderDto> result = orders.stream()
+                .map(o -> new SimpleOrderDto(o))
+                .collect(toList());
+        return result;
+    }
+
 }

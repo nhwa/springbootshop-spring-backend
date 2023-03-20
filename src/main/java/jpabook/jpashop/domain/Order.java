@@ -33,8 +33,8 @@ public class Order {
     private List<OrderItem> orderItems = new ArrayList<>();
 
     @OneToOne(fetch = LAZY, cascade = CascadeType.ALL) // Order(연관주) > Delivery JoinColumn
-    @JoinColumn(name = "Delivery_id")
-    private Delivery Delivery;
+    @JoinColumn(name = "delivery_id")
+    private Delivery delivery;
 
     private LocalDateTime orderDate;
 
@@ -51,9 +51,9 @@ public class Order {
         orderItem.setOrder(this);
     }
 
-    public void setDelivery(Delivery Delivery){
-        this.Delivery = Delivery;
-        Delivery.setOrder(this);
+    public void setDelivery(Delivery delivery){
+        this.delivery = delivery;
+        delivery.setOrder(this);
     }
 
     //==생성 메서드==//
@@ -73,7 +73,7 @@ public class Order {
     //==비즈니스 로직==//
     /** 주문 취소 */
     public void cancel(){
-        if(Delivery.getStatus() == DeliveryStatus.COMP){
+        if(delivery.getStatus() == DeliveryStatus.COMP){
             throw new IllegalStateException("이미 배송완료된 상품은 취소가 불가능합니다.");
         }
         this.setStatus(OrderStatus.CANCEL);

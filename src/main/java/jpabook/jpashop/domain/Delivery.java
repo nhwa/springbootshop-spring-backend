@@ -19,7 +19,7 @@ public class Delivery {
     private Long id;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "Delivery", fetch = LAZY) //무조건
+    @OneToOne(mappedBy = "delivery", fetch = LAZY) //무조건
     private Order order;
 
     @Embedded

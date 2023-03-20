@@ -48,6 +48,7 @@ public class MemberApiController {
         Long id = memberService.join(member);
         return new CreateMemberResponse(id);
     }
+    // @Getter @Setter @ToString @EqualsAndHashCode @RequiredArgsConstructor
     @Data
     static class CreateMemberRequest{ //DTO
         //다양한 api 스펙에 맞춰 validation - dto에서 관리하는 게 유지보수가 쉬움
